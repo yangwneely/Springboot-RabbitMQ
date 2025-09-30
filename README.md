@@ -6,6 +6,7 @@ RabbitMQ为异步消息处理提出了一个很好的解决方案，它是一个
 
 
 教程：
+
 spring boot RabbitMq基础教程（一）(https://developer.aliyun.com/article/1391788?spm=a2c6h.12873639.article-detail.4.35fd6165PhKKoQ)
 
 spring boot RabbitMq基础教程（二）(https://developer.aliyun.com/article/1391789?spm=5176.26934562.main.2.222e20d8OGtnZL)
