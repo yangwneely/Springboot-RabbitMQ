@@ -1,0 +1,30 @@
+server:
+  servlet:
+    context-path: /
+  port: 9088
+
+spring:
+  application:
+    name: rabbitmq
+  rabbitmq:
+#    host: localhost
+#    virtual-host: /
+#    username: guest
+#    password: guest
+#    port: 5672
+#    # 消息失败返回，比如路由不到队列时触发回调
+#    publisher-returns: true
+#    # 消息正确发送确认
+#    publisher-confirms: true
+    template:
+      retry:
+        enabled: true # 开启消费者失败重试机制
+        initial-interval: 2s # 初始的失败等待时长是2s
+#        multiplier: 3  # 下次失败的等待时长倍数，下次等待时长 = multiplier * last-interval
+#        max-attempts: 3 # 最大重试次数
+#        stateless：true  # true无状态;false有状态。如果业务中包合事务，这里改为false
+    listener:
+      simple:
+        # 手动ACK 不开启自动ACK模式,目的是防止报错后未正确处理消息丢失 默认 为 none
+        acknowledge-mode: MANUAL
+

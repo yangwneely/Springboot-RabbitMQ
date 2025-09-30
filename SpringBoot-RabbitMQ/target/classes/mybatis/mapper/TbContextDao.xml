@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wneely.dao.TbContextDao">
+
+    <resultMap id="BaseResultMap" type="com.wneely.entity.TbContext">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="context" property="context" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, context
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_context
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete from tb_context
+        where id = #{id,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.wneely.entity.TbContext">
+        insert into tb_context (id, context)
+        values (#{id,jdbcType=VARCHAR}, #{context,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="list" parameterType="com.wneely.entity.TbContext">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_context
+    </select>
+
+</mapper>

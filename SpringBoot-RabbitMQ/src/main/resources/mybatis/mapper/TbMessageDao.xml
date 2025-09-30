@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wneely.dao.TbMessageDao">
+
+    <resultMap id="BaseResultMap" type="com.wneely.entity.TbMessage">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="correlationData" property="correlationData" jdbcType="VARCHAR"/>
+        <result column="ack" property="ack" jdbcType="VARCHAR"/>
+        <result column="cause" property="cause" jdbcType="VARCHAR"/>
+        <result column="message" property="message" jdbcType="VARCHAR"/>
+        <result column="replyCode" property="replyCode" jdbcType="INTEGER"/>
+        <result column="replyText" property="replyText" jdbcType="VARCHAR"/>
+        <result column="exchange" property="exchange" jdbcType="VARCHAR"/>
+        <result column="routingKey" property="routingKey" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, correlationData, ack, cause, message, replyCode, replyText, exchange, routingKey
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_message
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete from tb_message
+        where id = #{id,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.wneely.entity.TbMessage">
+        insert into tb_message (id, correlationData, ack, cause, message, replyCode, replyText, exchange, routingKey)
+        values (#{id,jdbcType=VARCHAR}, #{correlationData,jdbcType=VARCHAR}
+        , #{ack,jdbcType=VARCHAR}, #{cause,jdbcType=VARCHAR}
+        , #{message,jdbcType=VARCHAR}, #{replyCode,jdbcType=INTEGER}
+        , #{replyText,jdbcType=VARCHAR}, #{exchange,jdbcType=VARCHAR}
+        , #{routingKey,jdbcType=VARCHAR} )
+    </insert>
+
+    <select id="list" parameterType="com.wneely.entity.TbMessage">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_message
+    </select>
+
+</mapper>

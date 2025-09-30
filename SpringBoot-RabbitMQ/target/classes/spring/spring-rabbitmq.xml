@@ -1,0 +1,117 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xmlns:rabiit="http://www.springframework.org/schema/rabbit"
+       xsi:schemaLocation="http://www.springframework.org/schema/rabbit
+	http://www.springframework.org/schema/rabbit/spring-rabbit-1.4.xsd
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <!-- 配置连接工厂 -->
+    <rabbit:connection-factory id="connectionFactory"
+                               host="127.0.0.1" port="5672"
+                               username="guest" password="guest"
+                               virtual-host="/"
+                               publisher-returns="true"
+    />
+
+    <!-- 定义mq管理 -->
+    <rabbit:admin connection-factory="connectionFactory"/>
+
+    <!-- 点到点队列声明 不存在自动声明 持久化配置 -->
+    <rabiit:queue name="dot2dot-queue" auto-declare="true" durable="true"/>
+
+    <!--  点到点队列的操作类定义  -->
+    <rabbit:template id="rabbitTemplateDot2dot"
+                     connection-factory="connectionFactory"
+                     queue="dot2dot-queue"/>
+
+    <!-- 点到多队列声明 不存在自动声明 持久化配置 -->
+    <rabiit:queue name="dot2more-queue" auto-declare="true" durable="true"/>
+
+    <!--  点到多队列的操作类定义  -->
+    <rabbit:template id="rabbitTemplateDot2dmore"
+                     connection-factory="connectionFactory"
+                     queue="dot2more-queue"/>
+
+    <!-- fanout 交换机的队列声明 -->
+    <rabbit:queue name="fanout1-queue" auto-declare="true" durable="true"/>
+    <rabbit:queue name="fanout2-queue" auto-declare="true" durable="true"/>
+
+    <!-- fanout 交换机 声明与绑定队列 -->
+    <rabbit:fanout-exchange name="fanout-exchange" id="fanout-exchange" durable="true">
+        <rabbit:bindings>
+            <rabbit:binding queue="fanout1-queue"/>
+            <rabbit:binding queue="fanout2-queue"/>
+        </rabbit:bindings>
+    </rabbit:fanout-exchange>
+
+    <!-- fanout 定义模版 -->
+    <rabbit:template id="rabbitTemplatefanout"
+                     connection-factory="connectionFactory"
+                     exchange="fanout-exchange"/>
+
+    <!-- direct 交换机的队列声明 -->
+    <rabbit:queue name="direct1-queue" auto-declare="true" durable="true"/>
+    <rabbit:queue name="direct2-queue" auto-declare="true" durable="true"/>
+
+    <!-- direct 交换机 声明与绑定队列  queue与routingKey绑定情况-->
+    <rabbit:direct-exchange name="direct-exchange" id="direct-exchange" durable="true">
+        <rabbit:bindings>
+            <rabbit:binding queue="direct1-queue" key="direct1-key"/>
+            <rabbit:binding queue="direct2-queue" key="direct1-key"/>
+            <rabbit:binding queue="direct2-queue" key="direct2-key"/>
+            <rabbit:binding queue="direct2-queue" key="direct3-key"/>
+        </rabbit:bindings>
+    </rabbit:direct-exchange>
+
+    <!-- direct 定义模版 -->
+    <rabbit:template id="rabbitTemplatedirect"
+                     connection-factory="connectionFactory"
+                     exchange="direct-exchange"/>
+
+    <!-- topic 交换机的队列声明 -->
+    <rabbit:queue name="topic1-queue" auto-declare="true" durable="true"/>
+    <rabbit:queue name="topic2-queue" auto-declare="true" durable="true"/>
+
+    <!-- topic 交换机 声明与绑定队列  queue与routingKey绑定情况-->
+    <rabbit:topic-exchange name="topic-exchange" id="topic-exchange" durable="true">
+        <rabbit:bindings>
+            <rabbit:binding queue="topic1-queue" pattern="*.orange.*"/>
+            <rabbit:binding queue="topic2-queue" pattern="*.*.rabbit"/>
+            <rabbit:binding queue="topic2-queue" pattern="lazy.#"/>
+        </rabbit:bindings>
+    </rabbit:topic-exchange>
+
+    <!-- topic 定义模版 -->
+    <rabbit:template id="rabbitTemplatetopic"
+                     connection-factory="connectionFactory"
+                     exchange="topic-exchange"/>
+
+
+
+    <!--&lt;!&ndash; 声明队列 &ndash;&gt;-->
+    <!--<rabbit:queue name="buss1-queue" auto-declare="true" durable="true"/>-->
+
+    <!--&lt;!&ndash; 定义交换机绑定队列 topic 交换机&ndash;&gt;-->
+    <!--<rabbit:topic-exchange name="buss1-exchange" id="buss1-exchange" durable="true">-->
+        <!--<rabbit:bindings>-->
+            <!--<rabbit:binding pattern="buss1.#" queue="buss1-queue"/>-->
+        <!--</rabbit:bindings>-->
+    <!--</rabbit:topic-exchange>-->
+
+
+    <!-- 消息对象json转换类 -->
+    <bean id="jsonMessageConverter"
+          class="org.springframework.amqp.support.converter.Jackson2JsonMessageConverter"/>
+
+
+    <!--&lt;!&ndash; 定义模版 &ndash;&gt;-->
+    <!--<rabbit:template id="rabbitTemplate"-->
+                     <!--connection-factory="connectionFactory"-->
+                     <!--exchange="buss1-exchange"/>-->
+    <!--    <rabbit:listener-container acknowledge="manual"/>-->
+    <!--
+        message-converter="jsonMessageConverter"
+    -->
+
+</beans>
