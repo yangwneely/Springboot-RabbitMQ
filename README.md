@@ -4,6 +4,7 @@ RabbitMQ为异步消息处理提出了一个很好的解决方案，它是一个
 
 安装好RabbitMQ后，管理端为http://localhost:15672/#/queues
 
+
 教程：
 spring boot RabbitMq基础教程（一）(https://developer.aliyun.com/article/1391788?spm=a2c6h.12873639.article-detail.4.35fd6165PhKKoQ)
 
